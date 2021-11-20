@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Md5 } from 'ts-md5/dist/md5';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { BackendService } from '../backend.service';
 
 interface Usuario {
   nombre: string,
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
   usuario: Usuario = {nombre: '', apellidos: ''};
   usuario2: Usuario = {nombre: '', apellidos: ''};
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private servicioBackend: BackendService) {
 
     this.formLogin = this.formBuilder.group(
       {
