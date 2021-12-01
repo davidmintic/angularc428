@@ -18,14 +18,14 @@ export class LoginComponent implements OnInit {
   formLogin: any;
   titulo: string = 'Iniciar sesión';
 
-  usuario: Usuario = {nombre: '', apellidos: ''};
-  usuario2: Usuario = {nombre: '', apellidos: ''};
+  usuario: Usuario = { nombre: '', apellidos: '' };
+  usuario2: Usuario = { nombre: '', apellidos: '' };
 
   constructor(private formBuilder: FormBuilder, private servicioBackend: BackendService) {
 
     this.formLogin = this.formBuilder.group(
       {
-        codigo: ['', Validators.required],
+        correo: ['', Validators.required],
         contrasenia: ['', Validators.required]
       }
     );
@@ -34,18 +34,34 @@ export class LoginComponent implements OnInit {
 
 
   ngOnInit(): void {
-  
+
   }
 
-  autenticar(): void {
+  login(): void {
 
-    const contrasenia = Md5.hashStr(this.formLogin.controls.contrasenia.value);
-    const json = this.formLogin.getRawValue();
+    const contraseniaEncriptada = Md5.hashStr(this.formLogin.controls.contrasenia.value);
+    const credenciales = this.formLogin.getRawValue();
+    credenciales.contrasenia = contraseniaEncriptada;
 
-    alert("Datos" + JSON.stringify(json));
+    this.servicioBackend.autenticateRequest(JSON.stringify(credenciales)).subscribe(
+      {
+        next: (datos: any) => {
+          const token =  datos['tk'];
+          localStorage.setItem('tokenedu', token);
+          this.servicioBackend.isAutenticate = true;
+          this.servicioBackend.token = token;
+        },
+        error: (e) => {
+          console.log(e);
+        },
+        complete: () => {
+
+        }
+      }
+    );
   }
 
-  
+
 
 
 }

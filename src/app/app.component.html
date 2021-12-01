@@ -5,9 +5,11 @@
 
 
         <div class="d-flex flex-row">
-            <button type="button" class="btn btn-light" routerLink="/admin-usuarios">G. usuarios</button>
-            
-            <button type="button" class="btn btn-light" routerLink="/programas-en-oferta">Ver programas en
+            <button *ngIf="servicioBackend.isAutenticate" type="button" class="btn btn-light"
+                routerLink="/admin-usuarios">G. usuarios</button>
+
+            <button *ngIf="servicioBackend.isAutenticate" type="button" class="btn btn-light"
+                routerLink="/programas-en-oferta">Ver programas en
                 oferta</button>
         </div>
 
