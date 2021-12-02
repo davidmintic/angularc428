@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
 import { BackendService } from '../backend.service';
 
 @Component({
@@ -30,9 +31,11 @@ export class AdminUsuariosComponent implements OnInit {
   openModalCrear = false;
   formGroupUsuario;
   tipo: any = '';
+  modoFormulario = 'adicion';
+  id = '';
 
   constructor(
-    private servicioBackend: BackendService,
+    public servicioBackend: BackendService,
     private formBuilder: FormBuilder
   ) {
 
@@ -55,6 +58,16 @@ export class AdminUsuariosComponent implements OnInit {
 
 
   crearUsuario() {
+
+    if(!this.tipo) {
+      Swal.fire(
+        'Ojo',
+        'Debes seleccionar el tipo de usuario!',
+        'warning'
+      );
+      return;
+    }
+
     const usuario = this.formGroupUsuario.getRawValue();
     usuario['tipo'] = this.tipo;
 
@@ -62,9 +75,29 @@ export class AdminUsuariosComponent implements OnInit {
       {
         next: (datos) => {
           this.listaUsuarios.push(usuario);
+          Swal.fire(
+            'Que bien',
+            'Usuario agregado!',
+            'success'
+          );
         },
         error: (e) => {
           console.log(e);
+
+          if (e.statusCode == 401) {
+            this.servicioBackend.autorized = false;
+            Swal.fire(
+              'error',
+              'Usuario No autorizado!',
+              'error'
+            );
+          } else {
+            Swal.fire(
+              'error',
+              'Usuario No agregado!',
+              'error'
+            );
+          }
         },
         complete: () => {
 
@@ -79,9 +112,19 @@ export class AdminUsuariosComponent implements OnInit {
       {
         next: (datos) => {
           this.listaUsuarios = datos;
+
         },
         error: (e) => {
           console.log(e);
+
+          if (e.statusCode == 401) {
+            this.servicioBackend.autorized = false;
+            Swal.fire(
+              'error',
+              'Usuario No autorizado!',
+              'error'
+            );
+          }
         },
         complete: () => {
 
@@ -92,8 +135,99 @@ export class AdminUsuariosComponent implements OnInit {
   }
 
 
-  abrirFormularioCrear(): void {
+  abrirFormulario(): void {
     this.openModalCrear = !this.openModalCrear;
+  }
+
+  entrarModoEdicion(usuario: any): void {
+    this.formGroupUsuario.patchValue(usuario);
+    this.id = usuario.id;
+    this.openModalCrear = true;
+    this.modoFormulario = 'edicion';
+  }
+
+  cambiarModoAdicion(): void {
+    this.modoFormulario = 'adicion';
+  }
+
+  editarUsuario(): void {
+
+    const usuario = this.formGroupUsuario.getRawValue();
+    usuario['tipo'] = this.tipo;
+
+    this.servicioBackend.patchRequest('usuarios', this.id, JSON.stringify(usuario)).subscribe(
+      {
+        next: (datos) => {
+          Swal.fire(
+            'Que bien',
+            'Usuario editado!',
+            'success'
+          );
+
+          this.obtenerUsuarios();
+        },
+        error: (e) => {
+          console.log(e);
+
+          if (e.statusCode == 401) {
+            this.servicioBackend.autorized = false;
+            Swal.fire(
+              'error',
+              'Usuario No autorizado!',
+              'error'
+            );
+          } else {
+            Swal.fire(
+              'error',
+              'Usuario No editado!',
+              'error'
+            );
+          }
+        },
+        complete: () => {
+
+        }
+      }
+    );
+  }
+  
+  eliminarUsuario(id: string): void {
+
+    this.servicioBackend.deleteRequest('usuarios', id).subscribe(
+      {
+        next: (datos) => {          
+          Swal.fire(
+            'Que bien',
+            'Usuario eliminado!',
+            'success'
+          );
+
+          this.obtenerUsuarios();
+        },
+        error: (e) => {
+          console.log(e);
+
+          if (e.statusCode == 401) {
+            this.servicioBackend.autorized = false;
+            Swal.fire(
+              'error',
+              'Usuario No autorizado!',
+              'error'
+            );
+          } else {
+            Swal.fire(
+              'error',
+              'Usuario No eliminar!',
+              'error'
+            );
+          }
+        },
+        complete: () => {
+
+        }
+      }
+
+    );
   }
 
 }
