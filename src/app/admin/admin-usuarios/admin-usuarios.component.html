@@ -2,19 +2,21 @@
 
 <div *ngIf="servicioBackend.autorized; else templateNoAutorized">
 
-    <div class="my-4">
+    <div class="my-4 pt-4">
 
         <div class="d-flex flex-row">
-            <i class="fas fa-camera"></i>
-            <label class="mx-2" for="">Seleccione tipo de usuario:</label>
-            <select class="mx-2" name="" id="" [(ngModel)]="tipo">
-                <option [value]="option.codigo" *ngFor="let option of tiposDeUsuarios">
-                    {{option.texto}}
-                </option>
 
-            </select>
+            <div class="d-flex flex-column cls-select-filter">
+                <label class="mx-2" for="">Seleccione tipo de usuario:</label>
+                <select class="mx-2" name="" id="" [(ngModel)]="tipo" (change)="filtroUsuarioPorTipo()">
+                    <option [value]="option.codigo" *ngFor="let option of tiposDeUsuariosFiltro">
+                        {{option.texto}}
+                    </option>
 
-            <button class="mx-2" type="button" class="btn btn-success">Filtrar</button>
+                </select>
+            </div>
+
+            <!-- <button class="mx-2" type="button" class="btn btn-success" (click)="filtroUsuarioPorTipo()">Filtrar</button> -->
             <button class="mx-2" type="button" class="ms-2 btn btn-warning" (click)="abrirFormulario()">
                 Crear
                 usuarios</button>
@@ -35,10 +37,20 @@
                 <input type="email" class="form-control" id="exampleFormControlInput1" formControlName="correo"
                     placeholder="">
             </div>
-            <div class="mb-3">
+            <div class="mb-3 me-3">
                 <label for="exampleFormControlInput1" class="form-label">Nombre</label>
                 <input type="email" class="form-control" id="exampleFormControlInput1" formControlName="nombre"
                     placeholder="">
+            </div>
+
+            <div class="mb-3">
+                <label class="mx-2 mb-2" for="">Seleccione tipo de usuario:</label>
+                <select class="mx-2" name="" id="" class="form-control" formControlName="tipo">
+                    <option [value]="option.codigo" *ngFor="let option of tiposDeUsuarios">
+                        {{option.texto}}
+                    </option>
+
+                </select>
             </div>
 
             <button type="button" class="ms-2 btn btn-warning cls-boton-guardar"
@@ -71,7 +83,7 @@
                             (click)="entrarModoEdicion(usuario)">Editar</button>
 
                         <button type="button" class="btn btn-danger"
-                            (click)="eliminarUsuario(usuario.id)">Eliminar</button>
+                            (click)="eliminarUsuario(usuario)">Eliminar</button>
                     </td>
                 </tr>
 

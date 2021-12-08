@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendService } from '../backend.service';
+import { SidebarService } from '../sidebar.service';
 
 interface Programa {
   nombre: string;
@@ -15,8 +16,12 @@ export class ProgramasEnOfertaComponent implements OnInit {
 
   listaProgramas: Programa[] = [];
 
-  constructor(private servicioBackend: BackendService) { 
+  constructor(
+    private servicioSideBar: SidebarService,
+    private servicioBackend: BackendService
+    ) { 
 
+      this.servicioSideBar.rutaActual = 'programas-en-oferta';
    
     this.servicioBackend.getRequest('programa-academicos').subscribe(
       {
@@ -34,6 +39,16 @@ export class ProgramasEnOfertaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('inicio');
+  }
+
+
+  ngAfterContentInit(): void {
+    console.log('se pintó');
+  }
+
+  ngAfterViewInit(): void {
+    console.log('se pintó completamente');
   }
 
 

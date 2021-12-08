@@ -2,39 +2,38 @@
     <nav class="navbar navbar-dark bg-primary px-4">
         <!-- Navbar content -->
         <h6>Universidad libre</h6>
-
-
         <div class="d-flex flex-row">
-
             <button *ngIf="servicioBackend.isAutenticate" (click)="cerrarSesion()" type="button"
                 class="btn btn-light">Cerrar sesión</button>
         </div>
-
-
     </nav>
 </header>
 
 <div class="d-flex flex-row" id="id-login" style="overflow: hidden; height: calc(100vh - 110px);">
 
-    <div *ngIf="servicioBackend.isAutenticate"
+    <div *ngIf="servicioBackend.isAutenticate && servicioSideBar.rutaActual != 'login'"
         class="cls-sidebar d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <svg class="bi me-2" width="40" height="32">
                 <use xlink:href="#bootstrap" />
-            </svg>           
+            </svg>
             <span class="fs-4">Sidebar</span>
         </a>
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item cls-item" routerLink="/admin-usuarios">
-                <a class="nav-link active" aria-current="page">                  
+
+            <li class="nav-item cls-item mb-2" routerLink="admin/admin-usuarios">
+                <a class="nav-link" [ngClass]="{'active' : servicioSideBar.rutaActual == 'admin-usuarios'}"
+                    aria-current="page">
                     <i class="fa fa-user me-2"></i>
                     Gestión usuarios
                 </a>
             </li>
-            <li class="cls-item" routerLink="/programas-en-oferta">
-                <a class="nav-link text-white">                  
-                    <i class="fa fa-university me-2"></i>                    
+
+            <li class="cls-item  mb-2" routerLink="/programas-en-oferta">
+                <a class="nav-link text-white"
+                    [ngClass]="{'active' : servicioSideBar.rutaActual == 'programas-en-oferta'}">
+                    <i class="fa fa-university me-2"></i>
                     Programas en oferta
                 </a>
             </li>
@@ -42,9 +41,10 @@
 
         </ul>
         <hr>
-        <div class="dropdown">
-            <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+        <div             
+        class="dropdown">
+            <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1"
+                data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
                 <strong>Perfil</strong>
             </a>

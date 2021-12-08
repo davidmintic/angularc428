@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { BackendService } from './backend.service';
+import { SidebarService } from './sidebar.service';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ export class AppComponent {
 
   constructor(
     public servicioBackend: BackendService,
+    public servicioSideBar: SidebarService,
     private router: Router
   ) {
 

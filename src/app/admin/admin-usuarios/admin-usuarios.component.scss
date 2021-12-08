@@ -1,0 +1,20 @@
+.cls-boton-guardar{
+    height: 40px;
+    position: relative;
+    top: 30px;
+}
+
+.cls-select-filter{
+    position: relative;
+    width: 224px;
+
+    label{
+        position: absolute;
+        left: 0;
+        top: -35px;
+    }
+
+    select{
+        height: 39px;
+    }
+}

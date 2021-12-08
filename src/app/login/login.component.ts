@@ -4,6 +4,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { BackendService } from '../backend.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2'
+import { SidebarService } from '../sidebar.service';
 
 interface Usuario {
   nombre: string,
@@ -26,8 +27,11 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private servicioBackend: BackendService,
+    private servicioSideBar: SidebarService,
     private router: Router
   ) {
+
+    this.servicioSideBar.rutaActual = 'login';
 
     this.formLogin = this.formBuilder.group(
       {
@@ -56,7 +60,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('tokenedu', token);
           this.servicioBackend.isAutenticate = true;
           this.servicioBackend.token = token;
-          this.router.navigate(['/admin-usuarios']);
+          this.router.navigate(['/admin/admin-usuarios']);
 
           Swal.fire(
             'Bienvenido',

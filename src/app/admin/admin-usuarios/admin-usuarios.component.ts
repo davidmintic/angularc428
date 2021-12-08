@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { BackendService } from '../backend.service';
+import { BackendService } from '../../backend.service';
+import { SidebarService } from '../../sidebar.service';
 
 @Component({
   selector: 'app-admin-usuarios',
@@ -10,6 +11,25 @@ import { BackendService } from '../backend.service';
 })
 export class AdminUsuariosComponent implements OnInit {
 
+
+  tiposDeUsuariosFiltro = [
+    {
+      codigo: 'todos',
+      texto: 'Todos',
+    },
+    {
+      codigo: 'estudiante',
+      texto: 'Estudiante',
+    },
+    {
+      codigo: 'docente',
+      texto: 'Docente',
+    },
+    {
+      codigo: 'administrador',
+      texto: 'Administrador',
+    }
+  ];
 
   tiposDeUsuarios = [
     {
@@ -27,6 +47,7 @@ export class AdminUsuariosComponent implements OnInit {
   ];
 
   listaUsuarios: any = [];
+  listaTodosLosUsuarios: any = [];
 
   openModalCrear = false;
   formGroupUsuario;
@@ -36,9 +57,12 @@ export class AdminUsuariosComponent implements OnInit {
 
   constructor(
     public servicioBackend: BackendService,
+    private servicioSideBar: SidebarService,
     private formBuilder: FormBuilder
   ) {
 
+
+    this.servicioSideBar.rutaActual = 'admin-usuarios';
     this.obtenerUsuarios();
 
     this.formGroupUsuario = this.formBuilder.group(
@@ -59,7 +83,7 @@ export class AdminUsuariosComponent implements OnInit {
 
   crearUsuario() {
 
-    if(!this.tipo) {
+    if (!this.formGroupUsuario.controls['tipo'].value) {
       Swal.fire(
         'Ojo',
         'Debes seleccionar el tipo de usuario!',
@@ -69,12 +93,12 @@ export class AdminUsuariosComponent implements OnInit {
     }
 
     const usuario = this.formGroupUsuario.getRawValue();
-    usuario['tipo'] = this.tipo;
 
     this.servicioBackend.postRequest('usuarios', JSON.stringify(usuario)).subscribe(
       {
-        next: (datos) => {
-          this.listaUsuarios.push(usuario);
+        next: (nuevoUsuario) => {
+          this.listaUsuarios.push(nuevoUsuario);
+          this.formGroupUsuario.reset();
           Swal.fire(
             'Que bien',
             'Usuario agregado!',
@@ -112,6 +136,7 @@ export class AdminUsuariosComponent implements OnInit {
       {
         next: (datos) => {
           this.listaUsuarios = datos;
+          this.listaTodosLosUsuarios = datos;
 
         },
         error: (e) => {
@@ -190,12 +215,12 @@ export class AdminUsuariosComponent implements OnInit {
       }
     );
   }
-  
-  eliminarUsuario(id: string): void {
 
-    this.servicioBackend.deleteRequest('usuarios', id).subscribe(
+  eliminarUsuario(usuario: any): void {
+
+    this.servicioBackend.deleteRequest('usuarios', usuario.id).subscribe(
       {
-        next: (datos) => {          
+        next: (datos) => {
           Swal.fire(
             'Que bien',
             'Usuario eliminado!',
@@ -228,6 +253,21 @@ export class AdminUsuariosComponent implements OnInit {
       }
 
     );
+  }
+
+
+  filtroUsuarioPorTipo(): void {
+
+    if (this.tipo == 'todos') {
+      this.listaUsuarios = this.listaTodosLosUsuarios;
+    } else {
+      const datosFiltrados = this.listaTodosLosUsuarios.filter(
+        (usuario: any) => usuario.tipo == this.tipo
+      );
+
+      this.listaUsuarios = datosFiltrados;
+    }
+
   }
 
 }

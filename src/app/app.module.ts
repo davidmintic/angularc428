@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ProgramasEnOfertaComponent } from './programas-en-oferta/programas-en-oferta.component';
 import { HttpClientModule } from '@angular/common/http';
-import { AdminUsuariosComponent } from './admin-usuarios/admin-usuarios.component';
+import { AdminUsuariosComponent } from './admin/admin-usuarios/admin-usuarios.component';
 
 @NgModule({
   declarations: [
